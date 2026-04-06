@@ -1,0 +1,41 @@
+# Data & Images
+HAM10000_images_part_1/
+HAM10000_images_part_2/
+ham10000/
+
+# Large CSV Datasets
+*.csv
+# If you want to keep metadata, uncomment the line below:
+# !HAM10000_metadata.csv
+
+# Large Models
+*.h5
+
+# Node.js
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+.vite/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.venv
+.env
+.pytest_cache/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.bak
+
+# OS
+.DS_Store
+Thumbs.db
