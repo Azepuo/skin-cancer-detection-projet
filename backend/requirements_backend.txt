@@ -4,3 +4,10 @@ tensorflow-cpu
 Pillow
 numpy
 python-multipart
+sqlalchemy
+pymysql
+cryptography
+passlib[bcrypt]
+python-jose[cryptography]
+python-dotenv
+pydantic[email]
