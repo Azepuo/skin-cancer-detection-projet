@@ -1,44 +1,125 @@
-# Skin Cancer Detection Mini-Project
+# 🧬 Dermascan AI
 
-This project contains a Jupyter Notebook designed to read, process, and classify the HAM10000 Skin Cancer Dataset using a simple Convolutional Neural Network (CNN).
+<p align="center">
+  <b>Clinical-grade AI-powered skin cancer detection platform</b><br/>
+  Deep learning diagnostics • Secure medical workflows • Professional reporting
+</p>
 
-## Getting Started
+<p align="center">
+  <img src="https://img.shields.io/badge/Architecture-FullStack-blue" />
+  <img src="https://img.shields.io/badge/Backend-FastAPI-green" />
+  <img src="https://img.shields.io/badge/Frontend-React%20%7C%20TypeScript-orange" />
+  <img src="https://img.shields.io/badge/ML-CNN%20%7C%20TensorFlow-purple" />
+  <img src="https://img.shields.io/badge/Database-MySQL-lightblue" />
+</p>
 
-Follow these steps to set up the project on your machine.
+---
 
-### 1. Install Dependencies
+## 🧠 Overview
 
-You will need Python 3 installed. It is highly recommended to use a virtual environment.
-Run the following command to install the required libraries:
+**Dermascan AI** is a full-stack, AI-powered medical platform designed for the **early detection and classification of skin cancer** using dermatoscopic images.
 
-```bash
+The system leverages a **Convolutional Neural Network (CNN)** trained on the HAM10000 dataset to classify skin lesions into multiple diagnostic categories, delivering high-confidence predictions in real time.
+
+Beyond raw AI inference, the platform focuses on **clinical usability**, combining secure data handling, structured analysis history, and professional-grade reporting to bridge the gap between **machine learning and real-world healthcare workflows**.
+
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+flowchart LR
+
+A[User Browser] --> B[React Frontend]
+
+B -->|REST API| C[FastAPI Backend]
+
+C -->|Auth| D[JWT Authentication]
+C -->|Business Logic| E[Analysis Service]
+
+E -->|ML Inference| F[CNN Model]
+F --> G[Image Preprocessing]
+
+C --> H[(MySQL Database)]
+
+C -->|PDF Export| I[jsPDF + html2canvas]
+
+B -->|State Management| J[Zustand Store]
+```
+
+---
+
+## ⚙️ Features
+
+- 🧠 AI-powered skin lesion classification (HAM10000)
+- 🔐 Secure authentication (JWT-based)
+- 📊 Analysis history & dashboard tracking
+- 🧾 Clinical-grade PDF report generation
+- 🗑️ Secure deletion of user records
+- ⚡ Optimistic UI updates for smooth UX
+- 🖥️ Modal-based quick preview of analyses
+- 🖨️ Print-optimized medical reports
+
+---
+
+## 🛠️ Tech Stack
+
+### 🎨 Frontend
+- React 18
+- TypeScript
+- Vite
+- Zustand
+- Tailwind CSS
+
+### ⚙️ Backend
+- FastAPI (Python)
+- SQLAlchemy
+- JWT Authentication
+- Bcrypt
+
+### 🤖 Machine Learning
+- TensorFlow / Keras (CNN)
+- NumPy
+- OpenCV / PIL
+
+### 📊 Database
+- MySQL
+
+### 📄 Reporting
+- jsPDF
+- html2canvas
+
+---
+
+## 🚀 Getting Started
+
+### Install Dependencies
+
 pip install -r requirements.txt
-```
+npm install
 
-### 2. Setting Up Kaggle API
+### Run Backend
 
-Since the dataset is sourced from Kaggle, you'll need your Kaggle API key (`kaggle.json`).
+cd backend
+uvicorn main:app --reload
 
-1. Log into [Kaggle](https://www.kaggle.com).
-2. Go to your Account Settings and scroll down to the "API" section.
-3. Click "Create New Token". This will download a `kaggle.json` file.
-4. Place the `kaggle.json` file in the correct location for your OS:
-   - **Windows**: `C:\Users\<Your-Username>\.kaggle\kaggle.json`
-   - **Mac/Linux**: `~/.kaggle/kaggle.json`
+### Run Frontend
 
-*(Make sure to set proper permissions on Mac/Linux: `chmod 600 ~/.kaggle/kaggle.json`)*
+cd frontend
+npm run dev
 
-### 3. Run the Jupyter Notebook
+---
 
-In the project folder, run the following command to start Jupyter:
+## 👥 Contributors
 
-```bash
-jupyter notebook
-```
+- Mohamed Ouijjane  
+  https://github.com/MohamedOuijjane  
 
-Open `Skin_Cancer_Detection.ipynb`. The notebook contains instructions and code to:
-- Automatically download the dataset from Kaggle directly.
-- Unzip the dataset.
-- Load and preprocess the images.
-- Train the model.
-- Evaluate its performance.
+- Yassine Meskaoui  
+  https://github.com/Azepuo  
+
+---
+
+## 📜 License
+
+MIT License
