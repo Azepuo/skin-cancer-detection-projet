@@ -1,10 +1,26 @@
 import os
 import numpy as np
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from PIL import Image
 import tensorflow as tf
 import io
+import time
+import shutil
+
+from database import engine, Base, get_db
+import models
+from routes import auth, analysis
+from auth import get_current_user
+from sqlalchemy.orm import Session
+
+# Create database tables
+Base.metadata.create_all(bind=engine)
+
+# Ensure uploads directory exists
+UPLOAD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 app = FastAPI(title="Skin Cancer Detection API")
 
@@ -16,6 +32,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include Authentication Routes
+app.include_router(auth.router, prefix="/api")
+app.include_router(analysis.router, prefix="/api")
+
+# Serve uploaded images
+app.mount("/api/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 # Load the model
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -56,8 +79,12 @@ LABELS = [
 def read_root():
     return {"status": "online", "model_loaded": model is not None}
 
-@app.post("/predict")
-async def predict(file: UploadFile = File(...)):
+@app.post("/api/predict")
+async def predict(
+    file: UploadFile = File(...),
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     if model is None:
         raise HTTPException(status_code=500, detail="Model not loaded on server.")
     
@@ -66,6 +93,15 @@ async def predict(file: UploadFile = File(...)):
         contents = await file.read()
         image = Image.open(io.BytesIO(contents)).convert("RGB")
         
+        # Save the original image to uploads folder
+        file_extension = os.path.splitext(file.filename)[1]
+        unique_filename = f"{current_user.id}_{int(time.time())}{file_extension}"
+        file_path = os.path.join(UPLOAD_DIR, unique_filename)
+        
+        # Write the file to disk
+        with open(file_path, "wb") as buffer:
+            buffer.write(contents)
+            
         # 1. Center crop to focus on the lesion
         image = center_crop_image(image)
         
@@ -114,11 +150,25 @@ async def predict(file: UploadFile = File(...)):
         # Sort by confidence
         all_results.sort(key=lambda x: x["confidence"], reverse=True)
             
+        # 5. Save Analysis to Database
+        db_analysis = models.Analysis(
+            user_id=current_user.id,
+            image_path=unique_filename,
+            prediction=result["name"],
+            confidence=float(scores[predicted_idx]),
+            all_scores=all_results
+        )
+        db.add(db_analysis)
+        db.commit()
+        db.refresh(db_analysis)
+
         return {
+            "id": db_analysis.id,
             "prediction": result["name"],
             "confidence": float(scores[predicted_idx]),
             "description": result.get("description", ""),
-            "all_scores": all_results
+            "all_scores": all_results,
+            "image_url": f"/uploads/{unique_filename}"
         }
         
     except Exception as e:
