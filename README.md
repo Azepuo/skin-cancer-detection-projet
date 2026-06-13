@@ -112,14 +112,13 @@ npm run dev
 
 ## 👥 Contributors
 
-- Mohamed Ouijjane  
-  https://github.com/MohamedOuijjane  
+- Moumen Mariam
+  https://github.com/MariamMoumen1
 
 - Yassine Meskaoui  
   https://github.com/Azepuo
 
-- Moumen Mariam
-  https://github.com/MariamMoumen1
+
 
 ---
 
